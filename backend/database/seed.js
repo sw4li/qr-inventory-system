@@ -1,4 +1,6 @@
 import { pool } from "../config/db.js";
+import { ItemModel } from "../models/itemModel.js";
+import { TransactionModel } from "../models/transactionModel.js";
 
 async function seedDatabase() {
   const client = await pool.connect();
@@ -89,6 +91,28 @@ async function seedDatabase() {
       );
       console.log(`Created: ${result.rows[0].name} (ID: ${result.rows[0].id})`);
     }
+
+    console.log("\n📊 Adding sample transactions...\n");
+        // Sample transactions (check-in/check-out history)
+    const transactions = [
+      { item_id: 1, user_id: null, transaction_type: 'in', quantity: 3, notes: 'Received from vendor' },
+      { item_id: 1, user_id: null, transaction_type: 'out', quantity: 1, notes: 'Checked out to developer' },
+      { item_id: 2, user_id: null, transaction_type: 'in', quantity: 10, notes: 'Bulk purchase' },
+      { item_id: 2, user_id: null, transaction_type: 'out', quantity: 2, notes: 'Distributed to team' },
+      { item_id: 3, user_id: null, transaction_type: 'in', quantity: 50, notes: 'Initial stock' },
+      { item_id: 4, user_id: null, transaction_type: 'in', quantity: 5, notes: 'Office setup' },
+      { item_id: 5, user_id: null, transaction_type: 'out', quantity: 1, notes: 'In use' },
+      { item_id: 6, user_id: null, transaction_type: 'in', quantity: 8, notes: 'Received' },
+      { item_id: 6, user_id: null, transaction_type: 'out', quantity: 2, notes: 'Team checkout' },
+    ];
+     for (const tx of transactions) {
+      await client.query(
+        `INSERT INTO transactions (item_id,user_id,transaction_type,quantity,notes) VALUES ($1,$2,$3,$4,$5)`,
+        [tx.item_id,tx.user_id,tx.transaction_type,tx.quantity,tx.notes]
+      );
+
+      console.log(`Transaction: Item ${tx.item_id} - ${tx.transaction_type === 'in' ? '✓ Check-in' : '✗ Check-out'} ${tx.quantity} units`);
+     }
 
     console.log("\nDatabase seeded successfully");
     console.log(`${items.length} items added`);

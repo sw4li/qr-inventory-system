@@ -1,10 +1,11 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import itemRoutes from "./routes/item.js";
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 import { testConnection } from './config/db.js';
-
+import itemRoutes from "./routes/item.js";
+import transactionRoutes from './routes/transactions.js';
+import qrCodeRoutes from './routes/qrCode.js';
 dotenv.config();
 
 const app = express();
@@ -42,6 +43,8 @@ app.get('/api/health', (req, res) => {
 
 // API routes
 app.use("/api/items", itemRoutes);
+app.use('/api/transactions',transactionRoutes);
+app.use("/api/qr", qrCodeRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
