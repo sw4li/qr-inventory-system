@@ -1,11 +1,12 @@
 import express from "express";
 import { TransactionModel } from "../models/transactionModel.js";
 import { ItemModel } from "../models/itemModel.js";
+import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
 
 // POST /api/transactions - Create transaction
-router.post("/", async (req, res, next) => {
+router.post("/", authMiddleware, async (req, res, next) => {
   try {
     const { itemId, userId, transactionType, quantity, notes } = req.body;
     if (!itemId || !transactionType || quantity === undefined) {
@@ -65,7 +66,7 @@ router.post("/", async (req, res, next) => {
 });
 
 // GET /api/transactions - Get all transactions
-router.get("/", async (req, res, next) => {
+router.get("/", authMiddleware, async (req, res, next) => {
   try {
     const { itemId, transactionType } = req.query;
     const transactions = await TransactionModel.findAll({
@@ -83,7 +84,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // GET /api/transactions/recent - Get recent transactions
-router.get("/recent", async (req, res, next) => {
+router.get("/recent",authMiddleware, async (req, res, next) => {
   try {
     const { hours = 24 } = req.query;
     const transactions = await TransactionModel.findRecent(parseInt(hours));
@@ -98,7 +99,7 @@ router.get("/recent", async (req, res, next) => {
 });
 
 // GET /api/transactions/item/:itemId - Get transactions for specific item
-router.get("/item/:itemId", async (req, res, next) => {
+router.get("/item/:itemId",authMiddleware, async (req, res, next) => {
   try {
     const itemId = parseInt(req.params.itemId);
     // Verify item exists
@@ -129,7 +130,7 @@ router.get("/item/:itemId", async (req, res, next) => {
 
 // GET /api/transactions/:id/summary - Get summary for item
 
-router.get("/:id/summary", async (req, res, next) => {
+router.get("/:id/summary",authMiddleware, async (req, res, next) => {
   try {
     const itemId = parseInt(req.params.id);
     const summary = await TransactionModel.getSummary(itemId);

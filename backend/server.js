@@ -6,6 +6,7 @@ import { testConnection } from './config/db.js';
 import itemRoutes from "./routes/item.js";
 import transactionRoutes from './routes/transactions.js';
 import qrCodeRoutes from './routes/qrCode.js';
+import authRoutes from './routes/auth.js';
 dotenv.config();
 
 const app = express();
@@ -42,6 +43,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // API routes
+app.use('/api/auth', authRoutes);
 app.use("/api/items", itemRoutes);
 app.use('/api/transactions',transactionRoutes);
 app.use("/api/qr", qrCodeRoutes);
