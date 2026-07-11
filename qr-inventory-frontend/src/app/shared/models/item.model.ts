@@ -8,6 +8,7 @@ export interface Item {
   min_quantity: number;
   status: string;
   created_at: string;
+  updated_at:string;
   description:string;
 }
 

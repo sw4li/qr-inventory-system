@@ -3,10 +3,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Item } from '../../../shared/models/item.model';
 import { ApiService } from '../../../core/services/api.service';
 import { CreateItemModalComponent } from '../create-item-modal/create-item-modal.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-items-list',
-  standalone: true,
   imports: [CommonModule, CreateItemModalComponent],
   templateUrl: './items-list.component.html',
   styleUrl: './items-list.component.scss',
@@ -19,7 +19,7 @@ export class ItemsListComponent {
   showModal = false;
   selectedItem: Item | null = null;
 
-  constructor(private apiservice: ApiService) {}
+  constructor(private apiservice: ApiService,private router:Router) {}
 
   editItem(item: any) {
     this.selectedItem = item;
@@ -67,4 +67,9 @@ export class ItemsListComponent {
     else status = 'OK';
     return status;
   }
+
+   viewItem(item: Item): void {
+    this.router.navigate(['/items', item.id]);
+  }
+
 }

@@ -5,10 +5,10 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../core/services/api.service';
 import { CreateItemModalComponent } from '../../items/create-item-modal/create-item-modal.component';
 import { NavbarComponent } from '../../../shared/navbar/navbar.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
   imports: [
     CommonModule,
     ItemsListComponent,
@@ -31,7 +31,7 @@ export class DashboardComponent implements OnInit {
     outOfStockItems: 0,
   };
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService ) {}
 
   ngOnInit() {
     this.loadItems();
@@ -89,4 +89,6 @@ export class DashboardComponent implements OnInit {
     this.showCreateModal = false;
     this.loadItems();
   }
+
+
 }

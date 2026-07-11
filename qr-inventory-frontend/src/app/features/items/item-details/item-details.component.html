@@ -1,1 +1,119 @@
-<p>item-details works!</p>
+<div class="item-details-container">
+  
+  <!-- Back Button -->
+  <div class="back-button">
+    <button (click)="goBack()">← Back to Dashboard</button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <p>Loading item details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- Item Details -->
+  <div *ngIf="item && !loading" class="item-details">
+    
+    <!-- Header -->
+    <div class="item-header">
+      <div class="header-left">
+        <h1>{{ item.name }}</h1>
+        <span class="badge" [ngClass]="getStatusClass()">
+          {{ getStatusText() }}
+        </span>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary" (click)="onEdit()">Edit Item</button>
+        <button class="btn btn-danger" (click)="onDelete()">Delete Item</button>
+      </div>
+    </div>
+
+    <!-- Item Information Grid -->
+    <div class="info-grid">
+      <div class="info-card">
+        <label>QR Code / Item ID</label>
+        <p class="code">{{ item.qr_code }}</p>
+      </div>
+
+      <div class="info-card">
+        <label>Category</label>
+        <p>{{ item.category || 'N/A' }}</p>
+      </div>
+
+      <div class="info-card">
+        <label>Current Quantity</label>
+        <p class="quantity-value">{{ item.quantity }} units</p>
+      </div>
+
+      <div class="info-card">
+        <label>Minimum Quantity</label>
+        <p>{{ item.min_quantity }} units</p>
+      </div>
+
+      <div class="info-card">
+        <label>Location</label>
+        <p>{{ item.location || 'N/A' }}</p>
+      </div>
+
+      <div class="info-card">
+        <label>Status</label>
+        <p>{{ item.status }}</p>
+      </div>
+
+      <div class="info-card">
+        <label>Created Date</label>
+        <p>{{ item.created_at | date: 'medium' }}</p>
+      </div>
+
+      <div class="info-card">
+        <label>Last Updated</label>
+        <p>{{ item.updated_at | date: 'medium' }}</p>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="description-section" *ngIf="item.description">
+      <h2>Description</h2>
+      <p>{{ item.description }}</p>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="transactions-section">
+      <h2>Transaction History</h2>
+
+      <div *ngIf="transactions.length > 0" class="transactions-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Quantity</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let txn of transactions">
+              <td>{{ txn.created_at | date: 'short' }}</td>
+              <td>
+                <span class="badge" [ngClass]="txn.transaction_type === 'in' ? 'badge-in' : 'badge-out'">
+                  {{ txn.transaction_type === 'in' ? '➕ Check In' : '➖ Check Out' }}
+                </span>
+              </td>
+              <td class="quantity">{{ txn.quantity }}</td>
+              <td>{{ txn.notes || '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="transactions.length === 0" class="empty-transactions">
+        <p>No transactions yet for this item</p>
+      </div>
+    </div>
+
+  </div>
+</div>

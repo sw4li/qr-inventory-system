@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
-  standalone:true,
+   standalone: true, 
   imports: [CommonModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
@@ -18,7 +18,9 @@ export class NavbarComponent {
   ) {}
 
   ngOnInit(){
+    if (this.authService.isLoggedIn()) {
     this.getCurrentUser();
+    }
   }
 
   logout(): void {

@@ -55,10 +55,10 @@ export class AuthService {
   }
 
   getCurrentUser(): Observable<any> {
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-    return this.http.get(`${this.apiUrl}/me`, { headers });
+    // const token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders({
+    //   Authorization: `Bearer ${token}`,
+    // });
+    return this.http.get(`${this.apiUrl}/me`);
   }
 }

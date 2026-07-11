@@ -11,7 +11,6 @@ import { Item } from '../../../shared/models/item.model';
 
 @Component({
   selector: 'app-create-item-modal',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './create-item-modal.component.html',
   styleUrl: './create-item-modal.component.scss',
