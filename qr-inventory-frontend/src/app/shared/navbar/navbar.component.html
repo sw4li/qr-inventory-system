@@ -1,0 +1,15 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <div class="navbar-logo">
+      <h1>QR Inventory</h1>
+    </div>
+    <!-- User Info & Logout -->
+    <div class="navbar-menu">
+      <span class="user-name">Welcome, <strong>{{currentUser?.username | titlecase}}</strong></span>
+      <button class="btn-logout" (click)="logout()">
+        Logout
+      </button>
+    </div>
+  </div>
+</nav>

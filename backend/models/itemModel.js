@@ -1,8 +1,7 @@
 import { pool } from "../config/db.js";
 
 export class ItemModel {
-  // Get all items
-  // Get all items
+
   static async findAll(filters = {}) {
     try {
       let query = 'SELECT * FROM items WHERE status = $1';

@@ -1,0 +1,53 @@
+
+<app-navbar></app-navbar>
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>QR Inventory Dashboard</h1>
+    <button (click)="onItemCreated()">Add New</button>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>Total Items</h3>
+      <p class="stat-value">{{ stats.totalItems }}</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Low Stock</h3>
+      <p class="stat-value warning">{{ stats.lowStockItems }}</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Out of Stock</h3>
+      <p class="stat-value danger">{{ stats.outOfStockItems }}</p>
+    </div>
+  </div>
+
+  <!-- Items List -->
+  <div class="items-section">
+    <h2>Inventory Items</h2>
+    <div *ngIf="loading" class="loading">Loading items...</div>
+
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+
+    <app-items-list
+      *ngIf="!loading && items.length > 0"
+      [items]="items"
+      (itemDeleted)="onItemDeleted()"
+      (itemCreated)="onItemCreatedSuccess()"
+    ></app-items-list>
+
+    <div *ngIf="!loading && items.length === 0" class="empty-state">
+      No items found. Create your first item to get started.
+    </div>
+  </div>
+
+  <app-create-item-modal 
+  *ngIf="showCreateModal"
+  (itemCreated)="onItemCreatedSuccess()"
+  (modalClosed)="onModalClosed()"
+ ></app-create-item-modal>
+</div>

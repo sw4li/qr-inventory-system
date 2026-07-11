@@ -56,87 +56,95 @@ router.get("/search", async (req, res, next) => {
 });
 
 // GET /api/items/qr/:code - Get item by QR code
-router.get('/qr/:code', async (req, res, next) => {
- try {
+router.get("/qr/:code", async (req, res, next) => {
+  try {
     const item = await ItemModel.findByQRCode(req.params.code);
 
     if (!item) {
       return res.status(404).json({
         success: false,
-        message: 'Item not found'
+        message: "Item not found",
       });
     }
     res.json({
       success: true,
-      data: item
-    });
-  } catch (error) {
-    next(error);
-  }
-
-  });
-
-// GET /api/items/:id - Get single item
-router.get('/:id', async (req, res, next) => {
-  try {
-    const item = await ItemModel.findById(req.params.id);
-    
-    if (!item) {
-      return res.status(404).json({
-        success: false,
-        message: 'Item not found'
-      });
-    }
-    
-    res.json({
-      success: true,
-      data: item
+      data: item,
     });
   } catch (error) {
     next(error);
   }
 });
 
-  // POST /api/items - Create new item
-  router.post('/', async (req, res, next) => {
+// GET /api/items/:id - Get single item
+router.get("/:id", async (req, res, next) => {
   try {
-    const { name, description, quantity, qrCode, category, location, minQuantity } = req.body;
-    // Validation
-    if (!name || !qrCode) {
-      return res.status(400).json({
+    const item = await ItemModel.findById(req.params.id);
+
+    if (!item) {
+      return res.status(404).json({
         success: false,
-        message: 'Name and QR code are required'
+        message: "Item not found",
       });
     }
 
-        if (quantity === undefined || quantity < 0) {
+    res.json({
+      success: true,
+      data: item,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// POST /api/items - Create new item
+router.post("/", async (req, res, next) => {
+  try {
+    const {
+      name,
+      description,
+      quantity,
+      qrCode,
+      category,
+      location,
+      minQuantity,
+    } = req.body;
+    console.log(minQuantity);
+    
+    if (!name || !qrCode) {
       return res.status(400).json({
         success: false,
-        message: 'Valid quantity is required'
+        message: "Name and QR code are required",
       });
     }
-        // Check if QR code already exists
+
+    if (quantity === undefined || quantity < 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Valid quantity is required",
+      });
+    }
+    // Check if QR code already exists
     const existing = await ItemModel.findByQRCode(qrCode);
     if (existing) {
       return res.status(409).json({
         success: false,
-        message: 'QR code already exists'
+        message: "QR code already exists",
       });
     }
 
-        const newItem = await ItemModel.create({
+    const newItem = await ItemModel.create({
       name,
       description,
       quantity: parseInt(quantity),
       qrCode,
       category,
       location,
-      minQuantity: minQuantity ? parseInt(minQuantity) : 0
+      minQuantity: minQuantity ? parseInt(minQuantity) : 0,
     });
-        res.status(201).json({
+    res.status(201).json({
       success: true,
-      message: 'Item created successfully',
-      data: newItem
+      message: "Item created successfully",
+      data: newItem,
     });
   } catch (error) {
     next(error);
@@ -144,28 +152,37 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // PUT /api/items/:id - Update item
-router.put('/:id', async (req, res, next) => {
-try {
-    const { name, description, quantity, category, location, minQuantity, status } = req.body;
-        const updatedItem = await ItemModel.update(req.params.id, {
+router.put("/:id", async (req, res, next) => {
+  try {
+    const {
+      name,
+      description,
+      quantity,
+      category,
+      location,
+      minQuantity,
+      status,
+    } = req.body;
+    const updatedItem = await ItemModel.update(req.params.id, {
       name,
       description,
       quantity: quantity !== undefined ? parseInt(quantity) : undefined,
       category,
       location,
-      minQuantity: minQuantity !== undefined ? parseInt(minQuantity) : undefined,
-      status
+      minQuantity:
+        minQuantity !== undefined ? parseInt(minQuantity) : undefined,
+      status,
     });
-        if (!updatedItem) {
+    if (!updatedItem) {
       return res.status(404).json({
         success: false,
-        message: 'Item not found'
+        message: "Item not found",
       });
     }
-        res.json({
+    res.json({
       success: true,
-      message: 'Item updated successfully',
-      data: updatedItem
+      message: "Item updated successfully",
+      data: updatedItem,
     });
   } catch (error) {
     next(error);
@@ -173,28 +190,31 @@ try {
 });
 
 // PATCH /api/items/:id/quantity - Update quantity (check-in/out)
-router.patch('/:id/quantity', async (req, res, next) => {
-    try {
+router.patch("/:id/quantity", async (req, res, next) => {
+  try {
     const { change } = req.body;
-    
+
     if (!change || isNaN(change)) {
       return res.status(400).json({
         success: false,
-        message: 'Valid quantity change is required'
+        message: "Valid quantity change is required",
       });
     }
-const updatedItem = await ItemModel.updateQuantity(req.params.id, parseInt(change));
+    const updatedItem = await ItemModel.updateQuantity(
+      req.params.id,
+      parseInt(change)
+    );
 
-   if (!updatedItem) {
+    if (!updatedItem) {
       return res.status(404).json({
         success: false,
-        message: 'Item not found'
+        message: "Item not found",
       });
     }
-        res.json({
+    res.json({
       success: true,
-      message: `Quantity ${change > 0 ? 'increased' : 'decreased'} successfully`,
-      data: updatedItem
+      message: `Quantity ${change > 0 ? "increased" : "decreased"} successfully`,
+      data: updatedItem,
     });
   } catch (error) {
     next(error);
@@ -202,25 +222,23 @@ const updatedItem = await ItemModel.updateQuantity(req.params.id, parseInt(chang
 });
 
 // DELETE /api/items/:id - Delete item
-router.delete('/:id', async (req, res, next) => {
-
+router.delete("/:id", async (req, res, next) => {
   try {
     const deletedItem = await ItemModel.delete(req.params.id);
-        if (!deletedItem) {
+    if (!deletedItem) {
       return res.status(404).json({
         success: false,
-        message: 'Item not found'
+        message: "Item not found",
       });
     }
-        res.json({
+    res.json({
       success: true,
-      message: 'Item deleted successfully',
-      data: deletedItem
+      message: "Item deleted successfully",
+      data: deletedItem,
     });
   } catch (error) {
     next(error);
   }
 });
-
 
 export default router;

@@ -1,0 +1,146 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ getModalTitle() }}</h2>
+      <button class="btn-close" (click)="onClose()">✕</button>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+    </div>
+
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="modal-body">
+      <div class="form-group">
+        <label for="name">Item Name *</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          placeholder="Enter item name"
+          class="form-control"
+        />
+        <div *ngIf="name?.invalid && name?.touched">
+          <small *ngIf="name?.hasError('required')">Name Required</small>
+          <small *ngIf="name?.hasError('minlength')"
+            >Name must be at least 3 characters long.</small
+          >
+          <small *ngIf="name?.hasError('pattern')"
+            >Only letters, numbers, hyphens (-) and slashes (/) are
+            permitted.</small
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">Quantity *</label>
+        <input
+          type="number"
+          id="quantity"
+          formControlName="quantity"
+          placeholder="1"
+          class="form-control"
+          min="1"
+          step="1"
+          (keydown)="blockDecimals($event)"
+          (paste)="handlePaste($event)"
+        />
+        <div *ngIf="quantity?.invalid && quantity?.touched">
+          <small *ngIf="quantity?.hasError('required')"
+            >Quantity Required</small
+          >
+          <small *ngIf="quantity?.hasError('min')"
+            >Quantity must be at least 1 unit.</small
+          >
+          <small *ngIf="quantity?.hasError('max')"
+            >Quantity exceeds 1000 unit.</small
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="minQuantity">Minimum Quantity *</label>
+        <input
+          type="number"
+          id="minQuantity"
+          formControlName="minQuantity"
+          placeholder="1"
+          class="form-control"
+          min="1"
+          step="1"
+          (keydown)="blockDecimals($event)"
+          (paste)="handlePaste($event)"
+        />
+        <div *ngIf="minQuantity?.invalid && minQuantity?.touched">
+          <small *ngIf="minQuantity?.hasError('required')"
+            >Min.quantity Required</small
+          >
+          <small *ngIf="minQuantity?.hasError('min')"
+            >Min.quantity must be at least 1 unit.</small
+          >
+          <small *ngIf="minQuantity?.hasError('max')"
+            >Min.quantity exceeds 1000 unit.</small
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category</label>
+        <input
+          type="text"
+          id="category"
+          formControlName="category"
+          placeholder="Electronics, Furniture, etc."
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="qrcode">Unique ID</label>
+        <input
+          type="text"
+          id="qrcode"
+          formControlName="qrCode"
+          placeholder="Item/001"
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location</label>
+        <input
+          type="text"
+          id="location"
+          formControlName="location"
+          placeholder="Warehouse A, Shelf 2, etc."
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          placeholder="Add item description"
+          class="form-control"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <!-- Buttons -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="onClose()"
+          [disabled]="loading"
+        >
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          {{ getSubmitButtonText() }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="items-list">
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Quantity</th>
+        <th>Min Qty</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items">
+        <td>{{ item.name }}</td>
+        <td>{{ item.category || 'N/A' }}</td>
+        <td class="quantity">{{ item.quantity }}</td>
+        <td>{{ item.min_quantity }}</td>
+        <td>
+          <span class="badge" [ngClass]="getStatusClass(item)">
+            {{ getStatusText(item) }}
+          </span>
+        </td>
+        <td class="actions">
+          <button class="btn-small btn-info" title="View Details">👁️</button>
+          <button class="btn-small btn-warning" title="Edit" (click)="editItem(item)">✏️</button>
+          <button 
+            class="btn-small btn-danger" 
+            title="Delete"
+            (click)="deleteItem(item.id)"
+            [disabled]="deletingId === item.id"
+          >
+            {{ deletingId === item.id ? '...' : '🗑️' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+    <app-create-item-modal 
+    *ngIf="showModal"
+    [item]="selectedItem"
+    (itemCreated)="onItemCreatedOrUpdated()"
+    (modalClosed)="onModalClosed()"
+  ></app-create-item-modal>
+</div>
