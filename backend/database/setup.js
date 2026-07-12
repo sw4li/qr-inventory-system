@@ -64,7 +64,7 @@ setupDatabase()
     console.log("\n Setup complete!");
     process.exit(0);
   })
-  .catch(() => {
+  .catch((err) => {
     console.error("\n Setup failed:", err.message);
     process.exit(1);
   });
